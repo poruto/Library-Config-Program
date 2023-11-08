@@ -100,7 +100,7 @@
 000237231019           *inlr = *on;
 000238231019           return;
 000239231108
-000240231108           // Soubroutine that runs if the selected run mode is *ALDON
+000240231108           // Soubroutine that runs if the selected run mode (PMode) is *ALDON
 000241231108           begSr RunAldonMode;
 000242231108             // Asign data to data structures
 000243231108             PAReleaseInfo = PAREL;
@@ -114,7 +114,7 @@
 000324231108             ExecuteCLCommand(Cmd);
 000328231108           endSr;
 000329231108
-000330231108           // Soubroutine that runs if the selected run mode is *USER
+000330231108           // Soubroutine that runs if the selected run mode (PMode) is *USER
 000399231108           begSr RunUserMode;
 000400231108             open LIBLLF;
 000401231108             // Clear Libraries by Type
