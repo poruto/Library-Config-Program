@@ -1,0 +1,6 @@
+000200231023             STRPGMEXP  PGMLVL(*CURRENT) LVLCHK(*YES) SIGNATURE('v1.0')
+000300231023                EXPORT     SYMBOL(SplitStringIntoSegments)
+000301231023                EXPORT     SYMBOL(ExecuteCLCommand)
+000302231023                EXPORT     SYMBOL(ClearLibrariesOfTypeFromLibl)
+000303231025                EXPORT     SYMBOL(CheckObjExists)
+000500231023             ENDPGMEXP

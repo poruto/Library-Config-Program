@@ -1,0 +1,8 @@
+000100231018     A          R LIBLREC
+000102231018     A* Columns
+000104231018     A            KEYNAME       10A         COLHDG('Keyname')
+000105231018     A            LIBRARY       10A         COLHDG('Library')
+000106231023     A            TYPE          10A         VALUES('*SYS' '*CURRENT' '*USR')
+000107231023     A                                      COLHDG('Type')
+000108231018     A            SEQNO          4P 0       COLHDG('Sequence' 'number')
+000109231018

@@ -1,0 +1,29 @@
+000100231019/* CLLE program to set job library list based on library type */
+000101231019             PGM        PARM(&LIBNAME &LIBTYPE &SUCCESS)
+000102231019
+000103231019             /* Declare parameters */
+000104231019             DCL        VAR(&LIBNAME) TYPE(*CHAR) LEN(10)
+000105231019             DCL        VAR(&LIBTYPE) TYPE(*CHAR) LEN(10)
+000106231019             DCL        VAR(&SUCCESS) TYPE(*CHAR) LEN(1)
+000107231019
+000108231019             /* Default */
+000109231019             CHGVAR     VAR(&SUCCESS) VALUE('1')
+000110231019
+000111231019             /* Check the library type and set the library list accordingly */
+000112231019             IF         COND(&LIBTYPE = '*CURRENT') THEN(DO)
+000113231019                CHGCURLIB  CURLIB(&LIBNAME)
+000114231019             ENDDO
+000118231023             ELSE       IF COND(&LIBTYPE = '*SYS' *AND &LIBNAME *NE 'QSYS') THEN(DO)
+000119231023                CHGSYSLIBL LIB(&LIBNAME)
+000120231019             ENDDO
+000121231019             ELSE       IF COND(&LIBTYPE = '*USR') THEN(DO)
+000122231023                ADDLIBLE   LIB(&LIBNAME) POSITION(*LAST)
+000123231019             ENDDO
+000124231019             ELSE       CMD(DO)
+000125231019                /* Invalid library type - handle the error */
+000126231019                CHGVAR     VAR(&SUCCESS) VALUE('0')
+000127231019                SNDPGMMSG  MSG('Invalid library type specified.') MSGTYPE(*INFO)
+000128231019             ENDDO
+000129231019
+000130231019             ENDPGM
+000131231019
