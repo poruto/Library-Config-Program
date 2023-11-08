@@ -81,12 +81,15 @@
 000196231023           end-pr;
 000197231108
 000198231108           // Main
-000199231108           if PMode = '*USER';
-000200231108             exSr RunUserMode;
-000201231108           elseIf PMode = '*ALDON';
-000202231108             exSr RunAldonMode;
-000203231108           endIf;
-000205231108
+000199231108           select;
+000200231108             when choice = '*USER';
+000201231108               exSr RunUserMode;
+000202231108             when choice = '*ALDON';
+000203231108               exSr RunAldonMode;
+000204231108              other;
+000205231108                dsply ('Not a valid Mode');
+000206231108           endSl;
+000208231108
 000237231019           *inlr = *on;
 000238231019           return;
 000239231108
