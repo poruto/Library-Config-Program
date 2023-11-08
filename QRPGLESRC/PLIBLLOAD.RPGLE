@@ -82,11 +82,11 @@
 000197231108
 000198231108           // Main
 000199231108           select;
-000200231108             when choice = '*USER';
+000200231108             when PMode = '*USER';
 000201231108               exSr RunUserMode;
-000202231108             when choice = '*ALDON';
+000202231108             when PMode = '*ALDON';
 000203231108               exSr RunAldonMode;
-000204231108              other;
+000204231108             other;
 000205231108                dsply ('Not a valid Mode');
 000206231108           endSl;
 000208231108
