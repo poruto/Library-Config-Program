@@ -93,10 +93,14 @@
 000209231108               exSr RunUserMode;
 000210231108             when PMode = '*ALDON';
 000211231108               exSr RunAldonMode;
-000212231108             other;
-000213231108                dsply ('Not a valid Mode');
-000214231108           endSl;
-000215231108
+000212231108             when PMode = '*AURORA';
+000213231108               // TO DO
+000214231108             when PMode = '*PREAURORA';
+000215231108               // TO DO
+000216231108             other;
+000217231108                dsply ('Not a valid Mode');
+000218231108           endSl;
+000219231108
 000237231019           *inlr = *on;
 000238231019           return;
 000239231108
