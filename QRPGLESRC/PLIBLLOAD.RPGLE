@@ -64,79 +64,159 @@
 000179231019           dcl-s KEYNAME char(10);
 000180231019           dcl-s LIBRARY char(10);
 000181231019           dcl-s TYPE char(10);
-000182231019           dcl-s SEQNO packed(4:0);
-000183231019
-000184231019           // Variable to check success of SetJobLibrary procedure
-000185231019           dcl-s Success char(1) inz('0');
-000186231019
-000187231019           // Prototypes
-000188231019           dcl-pr SetJobLibrary extpgm('SETJOBLIB');
-000189231019             LibraryName char(10);
-000190231019             LibraryType char(10);
-000191231019             Success char(1);
-000192231023           end-pr;
-000193231023
-000194231023           dcl-pr ClearLibrariesOfTypeFromLibl;
-000195231023             LibraryType char(10);
+000182231108           dcl-s SEQNO packed(4:0);
+000184231019
+000185231019           // Variable to check success of SetJobLibrary procedure
+000186231019           dcl-s Success char(1) inz('0');
+000187231108
+000188231108           // For executing CL commands
+000189231108           dcl-s Cmd char(300);
+000190231019
+000191231019           // Prototypes
+000192231019           dcl-pr SetJobLibrary extpgm('SETJOBLIB');
+000193231019             LibraryName char(10);
+000194231019             LibraryType char(10);
+000195231019             Success char(1);
 000196231023           end-pr;
 000197231108
-000198231108           // Main
-000199231108           select;
-000200231108             when PMode = '*USER';
-000201231108               exSr RunUserMode;
-000202231108             when PMode = '*ALDON';
-000203231108               exSr RunAldonMode;
-000204231108             other;
-000205231108                dsply ('Not a valid Mode');
-000206231108           endSl;
-000208231108
+000198231108           dcl-pr ExecuteCLCommand;
+000199231108             Cmd char(300);
+000200231108           end-pr;
+000201231023
+000202231023           dcl-pr ClearLibrariesOfTypeFromLibl;
+000203231023             LibraryType char(10);
+000204231023           end-pr;
+000205231108
+000206231108           // Main
+000207231108           select;
+000208231108             when PMode = '*USER';
+000209231108               exSr RunUserMode;
+000210231108             when PMode = '*ALDON';
+000211231108               exSr RunAldonMode;
+000212231108             other;
+000213231108                dsply ('Not a valid Mode');
+000214231108           endSl;
+000215231108
 000237231019           *inlr = *on;
 000238231019           return;
 000239231108
-000240231108           begSr RunAldonMode;
-000241231108             // Asign data to data structures
-000242231108             PAReleaseInfo = PAREL;
-000243231108             PAJobDInfo = PAJOBD;
-000244231108
-000245231108             //dsply (PAReleaseInfo.Release);
-000246231108             //dsply (PAReleaseInfo.Application);
+000240231108           // Soubroutine that runs if the selected run mode is *ALDON
+000241231108           begSr RunAldonMode;
+000242231108             // Asign data to data structures
+000243231108             PAReleaseInfo = PAREL;
+000244231108             PAJobDInfo = PAJOBD;
+000245231108
+000246231108             //dsply (PAReleaseInfo.Release);
+000247231108             //dsply (PAReleaseInfo.Application);
 000248231108             //dsply (PAJobDInfo.JobDescription);
 000249231108
-000250231108           endSr;
-000251231108
-000252231108           begSr RunUserMode;
-000253231108             open LIBLLF;
-000254231108             // Clear Libraries by Type
-000255231108             ClearLibrariesOfTypeFromLibl(PLoadType);
-000256231108
-000257231108             dow 1 = 1;
-000258231108
-000259231108               read LIBLLF;
-000260231108
-000261231108               if %eof(LIBLLF);
-000262231108                 leave;
-000263231108               endIf;
-000264231108
-000265231108               if KEYNAME = PKeyName;
-000266231108
-000267231108                 if PLoadType = LOAD_ALL_TYPES or TYPE = PLoadType;
-000268231108
-000269231108                   SetJobLibrary(LIBRARY : TYPE : Success);
-000270231108
-000271231108                   if Success = '0';
-000272231108                     dsply ('Error occured while setting library.');
-000273231108                     leave;
-000274231108                   endIf;
-000275231108
-000276231108                 endIf;
-000277231108               endIf;
-000278231108
-000279231108             endDo;
-000280231108
-000281231108             if Success = '1';
-000282231108                dsply ('Library list set.');
-000283231108             endIf;
-000284231108
-000285231108             close LIBLLF;
-000286231108           endSr;
-000287231023
+000254231108             exSr BuildACMSLiblCommand;
+000324231108             ExecuteCLCommand(Cmd);
+000328231108           endSr;
+000329231108
+000330231108           // Soubroutine that runs if the selected run mode is *USER
+000399231108           begSr RunUserMode;
+000400231108             open LIBLLF;
+000401231108             // Clear Libraries by Type
+000402231108             ClearLibrariesOfTypeFromLibl(PLoadType);
+000403231108
+000404231108             dow 1 = 1;
+000405231108
+000406231108               read LIBLLF;
+000407231108
+000408231108               if %eof(LIBLLF);
+000409231108                 leave;
+000410231108               endIf;
+000411231108
+000412231108               if KEYNAME = PKeyName;
+000413231108
+000414231108                 if PLoadType = LOAD_ALL_TYPES or TYPE = PLoadType;
+000415231108
+000416231108                   SetJobLibrary(LIBRARY : TYPE : Success);
+000417231108
+000418231108                   if Success = '0';
+000419231108                     dsply ('Error occured while setting library.');
+000420231108                     leave;
+000421231108                   endIf;
+000422231108
+000423231108                 endIf;
+000424231108               endIf;
+000425231108
+000426231108             endDo;
+000427231108
+000428231108             if Success = '1';
+000429231108                dsply ('Library list set.');
+000430231108             endIf;
+000431231108
+000432231108             close LIBLLF;
+000433231108           endSr;
+000434231108
+000436231108           // Subroutine to build ACMSLIBL Command from Strings
+000437231108           begSr BuildACMSLiblCommand;
+000438231108             Cmd = 'ACMSLIBL REL(';
+000439231108
+000440231108             if PAReleaseInfo.Group = '';
+000441231108                Cmd = Cmd + '*N';
+000442231108             else;
+000443231108                Cmd = Cmd + %trim(PAReleaseInfo.Group);
+000444231108             endIf;
+000445231108
+000446231108             Cmd = Cmd + '/';
+000447231108
+000448231108             if PAReleaseInfo.Application = '';
+000449231108                Cmd = Cmd + '*N';
+000450231108             else;
+000451231108                Cmd = Cmd + %trim(PAReleaseInfo.Application);
+000452231108             endIf;
+000453231108
+000454231108             Cmd = Cmd + '/';
+000455231108
+000456231108             if PAReleaseInfo.Release = '';
+000457231108                Cmd = Cmd + '*N';
+000458231108             else;
+000459231108               Cmd = Cmd + %trim(PAReleaseInfo.Release);
+000460231108             endIf;
+000461231108
+000462231108             Cmd = Cmd + ')';
+000463231108
+000464231108             // ENV
+000465231108             Cmd = Cmd + ' ';
+000466231108             Cmd = Cmd + 'ENV(' + %trim(PAENV) + ')';
+000467231108
+000468231108             // DVPNAME
+000469231108             Cmd = Cmd + ' ';
+000470231108             Cmd = Cmd + 'DVPNAME(' + %trim(PADVPName) + ')';
+000471231108
+000472231108             // EMGCHK
+000473231108             Cmd = Cmd + ' ';
+000474231108             Cmd = Cmd + 'EMGCHK(' + %trim(PAEMGCHK) + ')';
+000475231108
+000476231108             // JOBD
+000477231108             Cmd = Cmd + ' ';
+000478231108             Cmd = Cmd + 'JOBD(';
+000479231108
+000480231108             if PAJobDInfo.Library = '';
+000481231108               Cmd = Cmd + '*N';
+000482231108             else;
+000483231108               Cmd = Cmd + %trim(PAJobDInfo.Library);
+000484231108             endIf;
+000485231108
+000486231108             Cmd = Cmd + '/';
+000487231108
+000488231108             if PAJobDInfo.JobDescription = '';
+000489231108               Cmd = Cmd + '*N';
+000490231108             else;
+000491231108               Cmd = Cmd + %trim(PAJobDInfo.JobDescription);
+000492231108             endIf;
+000493231108
+000494231108             Cmd = Cmd + ')';
+000495231108
+000496231108             // DTASET
+000497231108             Cmd = Cmd + ' ';
+000498231108             Cmd = Cmd + 'DTASET(' + %trim(PADTASet) + ')';
+000499231108
+000500231108             // EDTLIBL
+000501231108             Cmd = Cmd + ' ';
+000502231108             Cmd = Cmd + 'EDTLIBL(' + %trim(PAEDTLibl) + ')';
+000503231108           endSr;
+000504231023

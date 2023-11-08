@@ -31,7 +31,7 @@
 000131231023       dcl-s i int(3);
 000132231023
 000133231023       // (ExecuteCLCommand) Variables
-000134231023       dcl-s cmd char(100);
+000134231108       dcl-s cmd char(300);
 000135231023
 000136231023       // Prototype for the CL program
 000137231023       dcl-pr RetrieveJobLibl extpgm('RTVJOBLIBL');
@@ -41,14 +41,14 @@
 000141231023       end-pr;
 000142231023
 000143231023       dcl-pr QCMDEXC extpgm('QCMDEXC');
-000144231023          *n char(100) const options(*varsize);
+000144231108          *n char(300) const options(*varsize);
 000145231023          cmdLen packed(15:5) const;
 000146231023       end-pr;
 000147231025
 000153231023       // Procedures
 000154231023       dcl-proc ExecuteCLCommand export;
 000155231023         dcl-pi *n;
-000156231023           cmd char(100) const;
+000156231108           cmd char(300) const;
 000157231023         end-pi;
 000158231023
 000159231023         dcl-s cmdLength packed(15:5);
