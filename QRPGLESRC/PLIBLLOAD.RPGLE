@@ -180,43 +180,47 @@
 000462231108             Cmd = Cmd + ')';
 000463231108
 000464231108             // ENV
-000465231108             Cmd = Cmd + ' ';
-000466231108             Cmd = Cmd + 'ENV(' + %trim(PAENV) + ')';
-000467231108
-000468231108             // DVPNAME
-000469231108             Cmd = Cmd + ' ';
-000470231108             Cmd = Cmd + 'DVPNAME(' + %trim(PADVPName) + ')';
-000471231108
-000472231108             // EMGCHK
-000473231108             Cmd = Cmd + ' ';
-000474231108             Cmd = Cmd + 'EMGCHK(' + %trim(PAEMGCHK) + ')';
+000465231108             if PAENV <> '';
+000466231108                Cmd = Cmd + ' ';
+000467231108                Cmd = Cmd + 'ENV(' + %trim(PAENV) + ')';
+000468231108             endIf;
+000469231108
+000470231108             // DVPNAME
+000471231108             if PADVPName <> '';
+000472231108                Cmd = Cmd + ' ';
+000473231108                Cmd = Cmd + 'DVPNAME(' + %trim(PADVPName) + ')';
+000474231108             endIf;
 000475231108
-000476231108             // JOBD
-000477231108             Cmd = Cmd + ' ';
-000478231108             Cmd = Cmd + 'JOBD(';
-000479231108
-000480231108             if PAJobDInfo.Library = '';
-000481231108               Cmd = Cmd + '*N';
-000482231108             else;
-000483231108               Cmd = Cmd + %trim(PAJobDInfo.Library);
-000484231108             endIf;
-000485231108
-000486231108             Cmd = Cmd + '/';
+000476231108             // EMGCHK
+000477231108             if PAEMGCHK <> '';
+000479231108                Cmd = Cmd + ' ';
+000480231108                Cmd = Cmd + 'EMGCHK(' + %trim(PAEMGCHK) + ')';
+000481231108             endIf;
+000482231108
+000483231108             // JOBD
+000484231108             if PAJobDInfo.JobDescription <> '';
+000485231108                Cmd = Cmd + ' ';
+000486231108                Cmd = Cmd + 'JOBD(';
 000487231108
-000488231108             if PAJobDInfo.JobDescription = '';
-000489231108               Cmd = Cmd + '*N';
-000490231108             else;
-000491231108               Cmd = Cmd + %trim(PAJobDInfo.JobDescription);
-000492231108             endIf;
-000493231108
-000494231108             Cmd = Cmd + ')';
+000488231108                if PAJobDInfo.Library = '';
+000489231108                  Cmd = Cmd + '*N';
+000490231108                else;
+000491231108                  Cmd = Cmd + %trim(PAJobDInfo.Library);
+000492231108                endIf;
 000495231108
-000496231108             // DTASET
-000497231108             Cmd = Cmd + ' ';
-000498231108             Cmd = Cmd + 'DTASET(' + %trim(PADTASet) + ')';
-000499231108
-000500231108             // EDTLIBL
-000501231108             Cmd = Cmd + ' ';
-000502231108             Cmd = Cmd + 'EDTLIBL(' + %trim(PAEDTLibl) + ')';
-000503231108           endSr;
-000504231023
+000499231108                Cmd = '/' + Cmd + %trim(PAJobDInfo.JobDescription) + ')';
+000503231108             endIf;
+000504231108
+000507231108             // DTASET
+000508231108             if PADTASet <> '';
+000509231108                Cmd = Cmd + ' ';
+000510231108                Cmd = Cmd + 'DTASET(' + %trim(PADTASet) + ')';
+000511231108             endIf;
+000512231108
+000513231108             // EDTLIBL
+000514231108             if PAEDTLibl <> '';
+000515231108                Cmd = Cmd + ' ';
+000516231108                Cmd = Cmd + 'EDTLIBL(' + %trim(PAEDTLibl) + ')';
+000517231108             endIf;
+000518231108           endSr;
+000519231023
