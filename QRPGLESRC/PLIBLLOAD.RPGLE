@@ -88,7 +88,7 @@
 000204231023           end-pr;
 000205231108
 000206231108           // Main
-000207231109           select;
+000207231108           select;
 000208231108             when PMode = '*USER';
 000209231108               exSr RunUserMode;
 000210231108             when PMode = '*ALDON';
