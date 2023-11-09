@@ -78,27 +78,7 @@
 000194231019             LibraryType char(10);
 000195231019             Success char(1);
 000196231023           end-pr;
-000197231108
-000198231108           dcl-pr ExecuteCLCommand;
-000199231108             Cmd char(300);
-000200231108           end-pr;
-000201231023
-000202231023           dcl-pr ClearLibrariesOfTypeFromLibl;
-000203231023             LibraryType char(10);
-000204231023           end-pr;
-000205231108
-000206231108           // Main
-000207231108           select;
-000208231108             when PMode = '*USER';
-000209231108               exSr RunUserMode;
-000210231108             when PMode = '*ALDON';
-000211231108               exSr RunAldonMode;
-000212231108             when PMode = '*AURORA';
-000213231108               // TO DO
-000214231108             when PMode = '*PREAURORA';
-000215231108               // TO DO
-000216231108             other;
-000217231108                dsply ('Not a valid Mode');
+000197231109
 000218231108           endSl;
 000219231108
 000237231019           *inlr = *on;
