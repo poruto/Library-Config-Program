@@ -52,69 +52,83 @@
 000167231108
 000168231108             PADTASet char(10);
 000169231108             PAEDTLibl char(4);
-000170231108           end-pi;
-000171231019
-000172231019           // Define Logical File
-000173231108           dcl-f LIBLLF usage(*input) usropn;
-000174231108
-000175231019           // Constants
-000176231019           dcl-c LOAD_ALL_TYPES '*ALL';
-000177231019
-000178231019           // Define Variables
-000179231019           dcl-s KEYNAME char(10);
-000180231019           dcl-s LIBRARY char(10);
-000181231019           dcl-s TYPE char(10);
-000182231108           dcl-s SEQNO packed(4:0);
-000184231019
-000185231019           // Variable to check success of SetJobLibrary procedure
-000186231019           dcl-s Success char(1) inz('0');
-000187231108
-000188231108           // For executing CL commands
-000189231108           dcl-s Cmd char(300);
-000190231019
-000191231019           // Prototypes
-000192231019           dcl-pr SetJobLibrary extpgm('SETJOBLIB');
-000193231019             LibraryName char(10);
-000194231019             LibraryType char(10);
-000195231019             Success char(1);
-000196231023           end-pr;
-000197231108
-000198231108           dcl-pr ExecuteCLCommand;
-000199231108             Cmd char(300);
-000200231108           end-pr;
-000201231023
-000202231023           dcl-pr ClearLibrariesOfTypeFromLibl;
-000203231023             LibraryType char(10);
-000204231023           end-pr;
-000205231108
-000206231108           // Main
-000207231108           select;
-000208231108             when PMode = '*USER';
-000209231108               exSr RunUserMode;
-000210231108             when PMode = '*ALDON';
-000211231108               exSr RunAldonMode;
-000212231108             when PMode = '*AURORA';
-000213231108               // TO DO
-000214231108             when PMode = '*PREAURORA';
-000215231108               // TO DO
-000216231108             other;
-000217231108                dsply ('Not a valid Mode');
-000218231108           endSl;
-000219231108
+000170231115
+000171231115             // AURORA MODE
+000172231115
+000173231115             // PREAURORA MODE
+000174231108           end-pi;
+000175231019
+000176231019           // Define Logical File
+000177231108           dcl-f LIBLLF usage(*input) usropn;
+000178231108
+000179231019           // Constants
+000180231019           dcl-c LOAD_ALL_TYPES '*ALL';
+000181231019
+000182231019           // Define Variables
+000183231019           dcl-s KEYNAME char(10);
+000184231019           dcl-s LIBRARY char(10);
+000185231019           dcl-s TYPE char(10);
+000186231108           dcl-s SEQNO packed(4:0);
+000187231019
+000188231019           // Variable to check success of SetJobLibrary procedure
+000189231019           dcl-s Success char(1) inz('0');
+000190231108
+000191231108           // For executing CL commands
+000192231108           dcl-s Cmd char(300);
+000193231019
+000194231019           // Prototypes
+000195231019           dcl-pr SetJobLibrary extpgm('SETJOBLIB');
+000196231019             LibraryName char(10);
+000197231019             LibraryType char(10);
+000198231019             Success char(1);
+000199231023           end-pr;
+000200231108
+000201231108           dcl-pr ExecuteCLCommand;
+000202231108             Cmd char(300);
+000203231108           end-pr;
+000204231023
+000205231023           dcl-pr ClearLibrariesOfTypeFromLibl;
+000206231023             LibraryType char(10);
+000207231023           end-pr;
+000208231108
+000209231108           // Main
+000210231108           select;
+000211231108             when PMode = '*USER';
+000212231108               exSr RunUserMode;
+000213231108             when PMode = '*ALDON';
+000214231108               exSr RunAldonMode;
+000215231108             when PMode = '*AURORA';
+000216231115               exSr RunAuroraMode;
+000217231108             when PMode = '*PREAURORA';
+000218231115               exSr RunPreAuroraMode;
+000219231108             other;
+000220231108                dsply ('Not a valid Mode');
+000221231108           endSl;
+000222231108
 000237231019           *inlr = *on;
 000238231019           return;
-000239231108
-000240231108           // Soubroutine that runs if the selected run mode (PMode) is *ALDON
-000241231108           begSr RunAldonMode;
-000242231108             // Asign data to data structures
-000243231108             PAReleaseInfo = PAREL;
-000244231108             PAJobDInfo = PAJOBD;
-000245231108
-000246231108             //dsply (PAReleaseInfo.Release);
-000247231108             //dsply (PAReleaseInfo.Application);
-000248231108             //dsply (PAJobDInfo.JobDescription);
+000239231115
+000240231115           // Soubroutine that runs if the selected run mode (PMode) is *AURORA
+000241231115           begSr RunAuroraMode;
+000242231115             // TO DO
+000243231115           endSr;
+000244231115
+000245231115           // Soubroutine that runs if the selected run mode (PMode) is *PREAURORA
+000246231115           begSr RunPreAuroraMode;
+000247231115             // TO DO
+000248231115           endSr;
 000249231108
-000254231108             exSr BuildACMSLiblCommand;
+000250231108           // Soubroutine that runs if the selected run mode (PMode) is *ALDON
+000251231108           begSr RunAldonMode;
+000252231108             // Asign data to data structures
+000253231108             PAReleaseInfo = PAREL;
+000254231108             PAJobDInfo = PAJOBD;
+000255231108
+000256231108             //dsply (PAReleaseInfo.Release);
+000257231108             //dsply (PAReleaseInfo.Application);
+000258231108             //dsply (PAJobDInfo.JobDescription);
+000259231108
+000260231108             exSr BuildACMSLiblCommand;
 000324231108             ExecuteCLCommand(Cmd);
 000328231108           endSr;
 000329231108
